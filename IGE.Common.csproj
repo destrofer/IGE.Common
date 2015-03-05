@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <ProjectGuid>{9FF16105-BE2B-44A2-91C0-D79F38AD8BA6}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <OutputType>Library</OutputType>
+    <RootNamespace>IGE</RootNamespace>
+    <AssemblyName>IGE.Common</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <NoWin32Manifest>False</NoWin32Manifest>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <NoStdLib>False</NoStdLib>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <IntermediateOutputPath>.\obj\$(Configuration)\</IntermediateOutputPath>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <BaseAddress>4194304</BaseAddress>
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <FileAlignment>4096</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>.\bin\$(Configuration)\</OutputPath>
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>Full</DebugType>
+    <Optimize>False</Optimize>
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <BaseIntermediateOutputPath>.\obj\$(Configuration)\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>.\bin\$(Configuration)\</OutputPath>
+    <DebugSymbols>False</DebugSymbols>
+    <DebugType>None</DebugType>
+    <Optimize>True</Optimize>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+    <DefineConstants>TRACE</DefineConstants>
+    <BaseIntermediateOutputPath>.\obj\$(Configuration)\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Attributes\RuntimeImportAttribute.cs" />
+    <Compile Include="Events\CommonEvents.cs" />
+    <Compile Include="Exceptions\UserFriendlyException.cs" />
+    <Compile Include="Extensions\CommonBigIntegerExtensions.cs" />
+    <Compile Include="Extensions\CommonBinaryReaderExtensions.cs" />
+    <Compile Include="Extensions\CommonBinaryWriterExtensions.cs" />
+    <Compile Include="Extensions\CommonStringExtensions.cs" />
+    <Compile Include="GameConfig.cs" />
+    <Compile Include="GameDebugger.cs" />
+    <Compile Include="Interfaces\IAnimated.cs" />
+    <Compile Include="Interfaces\INoiseGenerator.cs" />
+    <Compile Include="Interfaces\IPositionable2D.cs" />
+    <Compile Include="Interfaces\IPositionable3D.cs" />
+    <Compile Include="Interfaces\IProceduralMaps.cs" />
+    <Compile Include="Interfaces\IRenderable2D.cs" />
+    <Compile Include="Interfaces\IRenderable3D.cs" />
+    <Compile Include="Interfaces\IResizeable2D.cs" />
+    <Compile Include="Interfaces\IResizeable3D.cs" />
+    <Compile Include="Interfaces\ISerializable.cs" />
+    <Compile Include="Interfaces\ISizedRenderable2D.cs" />
+    <Compile Include="Interfaces\ISizedRenderable3D.cs" />
+    <Compile Include="IO\FileFormatAttribute.cs" />
+    <Compile Include="IO\FileFormats\Text\StructuredTextFile.cs" />
+    <Compile Include="IO\FileFormats\Text\XmlFile.cs" />
+    <Compile Include="IO\FileSystem\Abstract\IFileSystemObject.cs" />
+    <Compile Include="IO\FileSystem\Abstract\IGEDirectory.cs" />
+    <Compile Include="IO\FileSystem\Abstract\IGEFileStream.cs" />
+    <Compile Include="IO\FileSystem\SystemNative\SystemNativeDirectory.cs" />
+    <Compile Include="IO\GameFile.cs" />
+    <Compile Include="Noise\ExtRandom.cs" />
+    <Compile Include="Noise\Perlin.cs" />
+    <Compile Include="Noise\Simplex.cs" />
+    <Compile Include="Platform\API.cs" />
+    <Compile Include="Platform\Application.cs" />
+    <Compile Include="Platform\DriverManager.cs" />
+    <Compile Include="Platform\Events\Close.cs" />
+    <Compile Include="Platform\Events\Move.cs" />
+    <Compile Include="Platform\Events\NativeWindowEventArgs.cs" />
+    <Compile Include="Platform\Events\Resize.cs" />
+    <Compile Include="Platform\Events\SizingAndMovingStateChange.cs" />
+    <Compile Include="Platform\GlobalActivator.cs" />
+    <Compile Include="Platform\IApiDriver.cs" />
+    <Compile Include="Platform\IApplication.cs" />
+    <Compile Include="Platform\IDisplayDevice.cs" />
+    <Compile Include="Platform\IDisplayMode.cs" />
+    <Compile Include="Platform\IDriver.cs" />
+    <Compile Include="Platform\IMonitor.cs" />
+    <Compile Include="Platform\INativeWindow.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Timers\GameTimer.cs" />
+    <Compile Include="Types\AABR.cs" />
+    <Compile Include="Types\Bitmap.cs" />
+    <Compile Include="Types\CacheableObject.cs" />
+    <Compile Include="Types\CallbackInfo.cs" />
+    <Compile Include="Types\Collections\ByteQueue.cs" />
+    <Compile Include="Types\Collections\ScopeStack.cs" />
+    <Compile Include="Types\Collections\SpaceHash.cs" />
+    <Compile Include="Types\Collections\WeakDictionary.cs" />
+    <Compile Include="Types\Color.cs" />
+    <Compile Include="Types\Color4.cs" />
+    <Compile Include="Types\DOM\DomAttribute.cs" />
+    <Compile Include="Types\DOM\DomAttributeContainer.cs" />
+    <Compile Include="Types\DOM\DomNode.cs" />
+    <Compile Include="Types\DOM\DomNodeContainer.cs" />
+    <Compile Include="Types\DOM\DomObject.cs" />
+    <Compile Include="Types\DOM\DomObjectContainer.cs" />
+    <Compile Include="Types\Matrix2.cs" />
+    <Compile Include="Types\Matrix4.cs" />
+    <Compile Include="Types\NodeGraph\GraphConnection.cs" />
+    <Compile Include="Types\NodeGraph\GraphNode.cs" />
+    <Compile Include="Types\NodeGraph\GraphObject.cs" />
+    <Compile Include="Types\NodeGraph\GraphPin.cs" />
+    <Compile Include="Types\Point2.cs" />
+    <Compile Include="Types\Point3.cs" />
+    <Compile Include="Types\Point4.cs" />
+    <Compile Include="Types\QuadSorter.cs" />
+    <Compile Include="Types\Quaternion.cs" />
+    <Compile Include="Types\Ray2.cs" />
+    <Compile Include="Types\Rectangle.cs" />
+    <Compile Include="Types\RegenerateableResource.cs" />
+    <Compile Include="Types\Size2.cs" />
+    <Compile Include="Types\Streams\ByteQueueStream.cs" />
+    <Compile Include="Types\Vector2.cs" />
+    <Compile Include="Types\Vector3.cs" />
+    <Compile Include="Types\Vector4.cs" />
+    <Compile Include="Utils\Utils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Attributes" />
+    <Folder Include="Events" />
+    <Folder Include="Exceptions" />
+    <Folder Include="Extensions" />
+    <Folder Include="Interfaces" />
+    <Folder Include="IO" />
+    <Folder Include="IO\FileFormats" />
+    <Folder Include="IO\FileSystem" />
+    <Folder Include="IO\FileSystem\Abstract" />
+    <Folder Include="IO\FileSystem\SystemNative" />
+    <Folder Include="Types\NodeGraph" />
+    <Folder Include="Utils" />
+    <Folder Include="Platform" />
+    <Folder Include="Platform\Events" />
+    <Folder Include="Timers" />
+    <Folder Include="Noise" />
+    <Folder Include="Types" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
