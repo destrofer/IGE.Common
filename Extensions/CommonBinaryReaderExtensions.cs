@@ -29,10 +29,30 @@ namespace System.IO {
 		}
 		
 		public static string ReadFixedSizeString(this BinaryReader reader, int byte_count, Encoding encoding) {
+			if( byte_count == 0 ) return "";
 			string str = encoding.GetString(reader.ReadBytes(byte_count));
 			int pos = str.IndexOf('\0');
+			if( pos < 0 ) return str;
 			if( pos == 0 ) return "";
 			return str.Substring(0, pos);
+		}
+		
+		public static string ReadZeroTerminatedString(this BinaryReader reader, Encoding encoding) {
+			byte c;
+			byte[] zero = encoding.GetBytes("\0");
+			int zeroLength = zero.Length, zeroMatch = 0;
+			ByteQueue bytes = new ByteQueue();
+
+			do {
+				c = reader.ReadByte();
+				bytes.Enqueue(c);
+				if( c == 0 )
+					zeroMatch++;
+				else
+					zeroMatch = 0;
+			} while(zeroMatch < zeroLength);
+			
+			return encoding.GetString(bytes.Dequeue(bytes.Length - zeroLength));
 		}
 		
 		public static Vector2 ReadVector2(this BinaryReader reader) {
@@ -63,5 +83,58 @@ namespace System.IO {
 				reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle()
 			);
 		}
+
+		public static ushort ReadUInt16(this BinaryReader reader, Endian endian) {
+			if( endian == Endian.Little )
+				return reader.ReadUInt16();
+			ushort val = reader.ReadUInt16();
+			val = unchecked((ushort)((val >> 8) | (val << 8)));
+			return val;
+		}
+
+		public static short ReadInt16(this BinaryReader reader, Endian endian) {
+			if( endian == Endian.Little )
+				return reader.ReadInt16();
+			short val = reader.ReadInt16();
+			val = unchecked((short)((val >> 8) | (val << 8)));
+			return val;
+		}
+
+		public static uint ReadUInt32(this BinaryReader reader, Endian endian) {
+			if( endian == Endian.Little )
+				return reader.ReadUInt32();
+			uint val = reader.ReadUInt32();
+			val = unchecked(((val >> 24) | ((val & 0xFF0000) >> 8) | ((val & 0xFF00) << 8) | (val << 24)));
+			return val;
+		}
+		
+		public static int ReadInt32(this BinaryReader reader, Endian endian) {
+			if( endian == Endian.Little )
+				return reader.ReadInt32();
+			int val = reader.ReadInt32();
+			val = unchecked(((val >> 24) | ((val & 0xFF0000) >> 8) | ((val & 0xFF00) << 8) | (val << 24)));
+			return val;
+		}
+
+		public static ulong ReadUInt64(this BinaryReader reader, Endian endian) {
+			if( endian == Endian.Little )
+				return reader.ReadUInt64();
+			ulong val = reader.ReadUInt64();
+			val = unchecked(((val >> 56) | ((val & 0xFF000000000000UL) >> 40) | ((val & 0xFF0000000000UL) >> 24) | ((val & 0xFF00000000UL) >> 8) | ((val & 0xFF000000UL) << 8) | ((val & 0xFF0000UL) << 24) | ((val & 0xFF00UL) << 40) | (val << 56)));
+			return val;
+		}
+
+		public static long ReadInt64(this BinaryReader reader, Endian endian) {
+			if( endian == Endian.Little )
+				return reader.ReadInt64();
+			long val = reader.ReadInt64();
+			val = unchecked(((val >> 56) | ((val & 0xFF000000000000L) >> 40) | ((val & 0xFF0000000000L) >> 24) | ((val & 0xFF00000000L) >> 8) | ((val & 0xFF000000L) << 8) | ((val & 0xFF0000L) << 24) | ((val & 0xFF00L) << 40) | (val << 56)));
+			return val;
+		}
+	}
+
+	public enum Endian : byte {
+		Little,
+		Big
 	}
 }
