@@ -131,6 +131,22 @@ namespace System.IO {
 			val = unchecked(((val >> 56) | ((val & 0xFF000000000000L) >> 40) | ((val & 0xFF0000000000L) >> 24) | ((val & 0xFF00000000L) >> 8) | ((val & 0xFF000000L) << 8) | ((val & 0xFF0000L) << 24) | ((val & 0xFF00L) << 40) | (val << 56)));
 			return val;
 		}
+		
+		public static float ReadSingle(this BinaryReader reader, Endian endian) {
+			if( endian == Endian.Little )
+				return reader.ReadSingle();
+			byte[] data = reader.ReadBytes(4);
+			Array.Reverse(data);
+			return BitConverter.ToSingle(data, 0);
+		}
+		
+		public static double ReadDouble(this BinaryReader reader, Endian endian) {
+			if( endian == Endian.Little )
+				return reader.ReadDouble();
+			byte[] data = reader.ReadBytes(8);
+			Array.Reverse(data);
+			return BitConverter.ToDouble(data, 0);
+		}
 	}
 
 	public enum Endian : byte {
