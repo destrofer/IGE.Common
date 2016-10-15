@@ -121,5 +121,18 @@ namespace IGE {
 			Z += scale * right.Z;
 		}
 		
+		public static float DistanceSquaredBetween(ref Vector3 a, ref Vector3 b) {
+			float x = b.X - a.X;
+			float y = b.Y - a.Y;
+			float z = b.Z - a.Z;
+			return x * x + y * y + z * z;
+		}
+		
+		public static float DistanceBetween(ref Vector3 a, ref Vector3 b) {
+			float x = b.X - a.X;
+			float y = b.Y - a.Y;
+			float z = b.Z - a.Z;
+			return (float)Math.Sqrt(x * x + y * y + z * z);
+		}
     }
 }

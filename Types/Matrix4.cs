@@ -17,6 +17,9 @@
  * along with IGE.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// NOTE: In some methods creating a new matrix with a constructor might be faster than applying changes to matrix fields since it is an immutable object.
+// This should be throughly investigated.
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -37,10 +40,10 @@ namespace IGE {
         );
 
         public Matrix4(Vector3 right, Vector3 up, Vector3 forward, Vector3 transfer) {
-        	M11 = right.X;		M12 = right.Y;		M13 = right.Z;		M14 = transfer.X;
-        	M21 = up.X;			M22 = up.Y;			M23 = up.Z;			M24 = transfer.Y;
-        	M31 = forward.X;	M32 = forward.Y;	M33 = forward.Z;	M34 = transfer.Z;
-        	M41 = 0;			M42 = 0;			M43 = 0;			M44 = 1;
+			M11 = right.X;		M12 = right.Y;		M13 = right.Z;		M14 = 0;
+			M21 = up.X;			M22 = up.Y;			M23 = up.Z;			M24 = 0;
+			M31 = forward.X;	M32 = forward.Y;	M33 = forward.Z;	M34 = 0;
+			M41 = transfer.X;	M42 = transfer.Y;	M43 = transfer.Z;	M44 = 1;
         }
 
         public Matrix4(
@@ -149,6 +152,103 @@ namespace IGE {
         	t = inMatr.M42; outMatr.M42 = inMatr.M24; outMatr.M24 = t;
         	t = inMatr.M43; outMatr.M43 = inMatr.M34; outMatr.M34 = t;
         }
+
+		public static void Invert(ref Matrix4 inMatr, out Matrix4 outMatr)
+		{
+			int i, j, k, col = 0, row = 0;
+			float fv, max;
+			int[] colIndex = new int[4] {0, 0, 0, 0};
+			int[] rowIndex = new int[4] {0, 0, 0, 0};
+			int[] pivotIndex = new int[4] {-1, -1, -1, -1};
+
+			float[][] inverse = new float[4][] {
+				new float[4] {inMatr.M11, inMatr.M12, inMatr.M13, inMatr.M14},
+				new float[4] {inMatr.M21, inMatr.M22, inMatr.M23, inMatr.M24},
+				new float[4] {inMatr.M31, inMatr.M32, inMatr.M33, inMatr.M34},
+				new float[4] {inMatr.M41, inMatr.M42, inMatr.M43, inMatr.M44}
+			};
+			float[] swapRow;
+
+			for( i = 0; i < 4; i++ ) {
+				max = 0f;
+				for( j = 3; j >= 0; j-- ) {
+					if( pivotIndex[j] != 0 ) {
+						for( k = 3; k >= 0; k-- ) {
+							if( pivotIndex[k] == -1 ) {
+								fv = Math.Abs(inverse[j][k]);
+								if( fv > max ) {
+									max = fv;
+									row = j;
+									col = k;
+								}
+							}
+							else if( pivotIndex[k] > 0 ) {
+								outMatr = inMatr;
+								return;
+							}
+						}
+					}
+				}
+
+				pivotIndex[col]++;
+
+				if( row != col ) {
+					swapRow = inverse[row];
+					inverse[row] = inverse[col];
+					inverse[col] = swapRow;
+				}
+
+				rowIndex[i] = row;
+				colIndex[i] = col;
+
+				fv = inverse[col][col];
+				if( fv == 0f )
+					throw new UserFriendlyException("Cannot invert singular matrix.", "There was an error in game math.");
+				fv = 1f / fv;
+
+				inverse[col][col] = 1f;
+				for( k = 3; k >= 0; k-- )
+					inverse[col][k] *= fv;
+
+				for( j = 3; j >= 0; j-- ) {
+					if( col != j ) {
+						fv = inverse[j][col];
+						inverse[j][col] = 0f;
+						for( k = 3; k >= 0; k-- )
+							inverse[j][k] -= inverse[col][k] * fv;
+					}
+				}
+			}
+
+			for( j = 3; j >= 0; j-- ) {
+				row = rowIndex[j];
+				col = colIndex[j];
+				if( row != col ) {
+					for( k = 3; k >= 0; k-- ) {
+						fv = inverse[k][row];
+						inverse[k][row] = inverse[k][col];
+						inverse[k][col] = fv;
+					}
+				}
+			}
+
+			outMatr = new Matrix4(inverse[0][0], inverse[0][1], inverse[0][2], inverse[0][3],
+								  inverse[1][0], inverse[1][1], inverse[1][2], inverse[1][3],
+								  inverse[2][0], inverse[2][1], inverse[2][2], inverse[2][3],
+								  inverse[3][0], inverse[3][1], inverse[3][2], inverse[3][3]);
+		}
+
+		public static Matrix4 Invert(Matrix4 inMatr) {
+			Matrix4 result;
+			Invert(ref inMatr, out result);
+			return result;
+		}
+
+		public Matrix4 Inverse() {
+			Matrix4 result;
+			Invert(ref this, out result);
+			return result;
+		}
 
         public static Matrix4 Perspective(float fov, float aspectRatio, float zNear, float zFar) {
             float yMax = zNear * (float)Math.Tan(0.5f * fov);

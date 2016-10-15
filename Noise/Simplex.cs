@@ -238,6 +238,12 @@ namespace IGE {
 			return 0.0;
 		}
 		
+		/// <summary>
+		/// Gives a procedural pseudo-random value for specified 2D coordinates.
+		/// </summary>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <returns>A number from 0.0 to 1.0.</returns>
 		public double Noise(double x, double y) {
 			double n0 = 0.0, n1 = 0.0, n2 = 0.0;
             double s = (x + y) * F2; // Hairy factor for 2D

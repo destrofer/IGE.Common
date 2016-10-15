@@ -40,6 +40,7 @@ namespace IGE {
 		
 		private static bool m_VSyncEnabled = true;			//  true to use vertical synchronization
 		private static bool m_FullScreen = true;			//  true to use full screen
+		private static bool m_AutoSwapBuffers = true;		//  true to swap buffers automatically after RenderFrame event. 
 		
 		//public static int BufferCount = 2;				// number of screen buffers (1, 2 or 3)
 		//public static int FullScreenAntialiasing = 0;	// level of full screen antialiasing (0, 1, 2, 4, 8, 16)
@@ -77,16 +78,32 @@ namespace IGE {
 		private static Dictionary<string, string> m_CustomVars = new Dictionary<string, string>();
 		public static Dictionary<string, string> CustomVars { get { return m_CustomVars; } }
 
+		// events
+		public delegate void VSyncChangedEventHandler(bool vsyncValue);
+		public static event VSyncChangedEventHandler VSyncChangedEvent;
+		
 		public static bool VSync
 		{
 			get { return m_VSyncEnabled; }
-			set { m_VSyncEnabled = value; }
+			set {
+				if( m_VSyncEnabled == value )
+					return;
+				m_VSyncEnabled = value;
+				if( VSyncChangedEvent != null )
+					VSyncChangedEvent(m_VSyncEnabled);
+			}
 		}
 
 		public static bool FullScreen
 		{
 			get { return m_FullScreen; }
 			set { m_FullScreen = value; }
+		}
+		
+		public static bool AutoSwapBuffers
+		{
+			get { return m_AutoSwapBuffers; }
+			set { m_AutoSwapBuffers = value; }
 		}
 		
 		public static string GetCustomValue(string id, string defval) {
